@@ -22,9 +22,10 @@ public class playerControl : MonoBehaviour
 
 
     //for sprinting
-    private bool isWalking = false;
+    // private bool isWalking = false;
     public float sprintMultiplier = 1.2f;
-
+    private bool toStartSprint = true;
+    private string sprintKey = "z";
 
 
     // Start is called before the first frame update
@@ -32,7 +33,7 @@ public class playerControl : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        grounded = false;
+        grounded = true;
         
 
     }
@@ -41,7 +42,8 @@ public class playerControl : MonoBehaviour
     //tired to fps
     void Update()
     {
-        Debug.Log(Input.GetKey("z"));
+        //Debug.Log(Input.GetKeyDown(sprintKey));
+        Debug.Log(toStartSprint);
         Debug.DrawRay(GetComponent<Transform>().position, new Vector3(0, castDistance*-1, 0), Color.red, 1f, false);
         horizontalMove = Input.GetAxis("Horizontal");
         //jumping
@@ -49,7 +51,45 @@ public class playerControl : MonoBehaviour
         {
             jump = true;
         }
+
+        // where the player can start sprinting
+        if (Input.GetKeyDown(sprintKey))
+        {
+            if (grounded == true)
+            {
+                toStartSprint = true;
+            }
+            else
+            {
+                toStartSprint = false;
+            }
+        }
+
+
+        // sprint
+        if (toStartSprint == true)
+        {
+            if (Input.GetKey(sprintKey))
+            {
+                sprintMultiplier = 1.8f;
+            }
+
+            else
+            {
+                sprintMultiplier = 1;
+            }
+        }
+
+        if (Input.GetKeyUp(sprintKey))
+        {
+            toStartSprint = false;
+        }
+
     }
+
+    // if the player y position is smaller than -25, teleport him to the start
+
+
 
     //physics always calculated on FixedUpdate
     //no input things in FixedUpdate
@@ -72,26 +112,7 @@ public class playerControl : MonoBehaviour
             rb.gravityScale = gravityFall;
         }
 
-
         
-        //sprinting
-        if ((-1f<= horizontalMove && horizontalMove <=1f && horizontalMove!=0))
-        {
-            isWalking = true;
-        }
-        else
-        {
-            isWalking = false;
-        }
-
-        if(isWalking == true && Input.GetKey("z")) 
-        {
-            sprintMultiplier = 1.8f;
-        }
-        else
-        {
-            sprintMultiplier = 1;
-        }
         //hello
         //Physics.RayCast(Origin, direction, maxDistance)
         //Scripting API: https://docs.unity3d.com/ScriptReference/Physics.Raycast.html
