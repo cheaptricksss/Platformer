@@ -28,13 +28,16 @@ public class playerControl : MonoBehaviour
     private string sprintKey = "z";
 
 
+    private SpriteRenderer mySpriteRenderer;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         grounded = true;
-        
+
+        mySpriteRenderer = GetComponent<SpriteRenderer>();
+
 
     }
 
@@ -44,8 +47,21 @@ public class playerControl : MonoBehaviour
     {
         //Debug.Log(Input.GetKeyDown(sprintKey));
         Debug.Log(toStartSprint);
-        Debug.DrawRay(GetComponent<Transform>().position, new Vector3(0, castDistance*-1, 0), Color.red, 1f, false);
+        Debug.DrawRay(GetComponent<Transform>().position, new Vector3(0, castDistance * -1, 0), Color.red, 1f, false);
         horizontalMove = Input.GetAxis("Horizontal");
+
+        // flip the player for backwards movement.
+        if (Input.GetAxis("Horizontal") > 0)
+        {
+            mySpriteRenderer.flipX = false;
+        }
+        else if (Input.GetAxis("Horizontal") < 0)
+        {
+            mySpriteRenderer.flipX = true;
+        }
+
+
+
         //jumping
         if (Input.GetButtonDown("Jump") && grounded) //jump default to space
         {
@@ -86,7 +102,7 @@ public class playerControl : MonoBehaviour
         }
 
     }
-
+    
     // if the player y position is smaller than -25, teleport him to the start
 
 
