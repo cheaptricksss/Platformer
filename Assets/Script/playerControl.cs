@@ -29,6 +29,9 @@ public class playerControl : MonoBehaviour
 
 
     private SpriteRenderer mySpriteRenderer;
+
+    // check point
+    public Vector2 lastCheckpointPos;
     // Start is called before the first frame update
     void Start()
     {
@@ -60,12 +63,20 @@ public class playerControl : MonoBehaviour
             mySpriteRenderer.flipX = true;
         }
 
+        // if the player y position is smaller than -25, teleport him to the start
+        if (transform.position.y < -25)
+        {
+            transform.position = lastCheckpointPos;
+
+        }
+
 
 
         //jumping
         if (Input.GetButtonDown("Jump") && grounded) //jump default to space
         {
             jump = true;
+            anim.SetBool("isJumping", true);
         }
 
         // where the player can start sprinting
@@ -101,15 +112,17 @@ public class playerControl : MonoBehaviour
             toStartSprint = false;
         }
 
+
+
+        // update ends here
     }
     
-    // if the player y position is smaller than -25, teleport him to the start
 
 
 
-    //physics always calculated on FixedUpdate
-    //no input things in FixedUpdate
-    private void FixedUpdate()
+//physics always calculated on FixedUpdate
+//no input things in FixedUpdate
+private void FixedUpdate()
     {
         HorizontalMove(horizontalMove);
 
@@ -140,10 +153,13 @@ public class playerControl : MonoBehaviour
         if (hit.collider != null && hit.collider.tag == "floor")
         {
             grounded = true;
+            anim.SetBool("isJumping", false);
+
         }
         else
         {
             grounded = false;
+          
         }
 
 
