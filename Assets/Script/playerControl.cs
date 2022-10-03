@@ -32,7 +32,13 @@ public class playerControl : MonoBehaviour
 
     // check point
     public Vector2 lastCheckpointPos;
+
+    // audio
+    AudioSource mySource;
+    public AudioClip deathSound;
+
     // Start is called before the first frame update
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -40,7 +46,8 @@ public class playerControl : MonoBehaviour
         grounded = true;
 
         mySpriteRenderer = GetComponent<SpriteRenderer>();
-
+        mySource = GetComponent<AudioSource>();
+        
 
     }
 
@@ -63,11 +70,12 @@ public class playerControl : MonoBehaviour
             mySpriteRenderer.flipX = true;
         }
 
-        // if the player y position is smaller than -25, teleport him to the start
-        if (transform.position.y < -25)
+     
+            // if the player y position is smaller than -25, teleport him to the start
+            if (transform.position.y < -25)
         {
             transform.position = lastCheckpointPos;
-
+            mySource.PlayOneShot(deathSound);
         }
 
 
@@ -77,6 +85,7 @@ public class playerControl : MonoBehaviour
         {
             jump = true;
             anim.SetBool("isJumping", true);
+            mySource.Play();
         }
 
         // where the player can start sprinting

@@ -6,9 +6,11 @@ public class checkpoint : MonoBehaviour
 {
     public playerControl pc;
     // Start is called before the first frame update
+    AudioSource mySource;
     void Start()
     {
         pc = GameObject.Find("mainPlayer").GetComponent<playerControl>();
+        mySource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -21,7 +23,10 @@ public class checkpoint : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            
             pc.lastCheckpointPos = transform.position;
+            mySource.Play();
+            
         }
     }
 }
